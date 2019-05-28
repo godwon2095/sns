@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="container" style="margin-top: 50px;">
+    <div class="row">
+        <div class="card col-12">
+            <div class="card-content">
+                <div class="card-title">글 수정하기</div>
+                <br>
+                <form action="{% url 'posts:update' post.id %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+
+                    <input type="submit" class="btn btn-primary" value="작성하기">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    
