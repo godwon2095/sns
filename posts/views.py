@@ -42,10 +42,7 @@ def update(request, id):
 
 def delete(request, id):
     post = get_object_or_404(Post, pk=id)
-    if request.method == "POST":
-        post.delete()
-
-        return redirect('home')
+    post.delete()
     return redirect('home')
 
 

@@ -6,11 +6,17 @@
         {% for post in posts %}
         <!-- <div class="col-12"> -->
             <div class="card col-12" style="width: 18rem; margin-top: 30px;">
+                <div class="post-buttons" style="margin-top:10px;margin-bottom:10px;">
+                    <span class="card-title writer">글쓴이 : {{ post.user.username }}</span>
+                    {% if user == post.user %}
+                    <a href="{% url 'posts:delete' post.pk %}" class="btn btn-primary right" style="margin-left: 15px;">삭제</a>
+                    <a href="{% url 'posts:edit' post.pk %}" class="btn btn-primary right">수정</a>
+                    {% endif %}
+                </div>
                 {% if post.image %}
                     <img src="{{ post.image.url }}" class="card-img-top" alt="...">
                 {% endif %}
                 <div class="card-body">
-                    <h4 class="card-title">글쓴이 : {{ post.user.username }}</h4>
                     <h5 class="card-title">{{ post.title }}</h5>
                     {{ post.likes_count }}명이 좋아합니다.
                     {% if user in post.likes.all %}
