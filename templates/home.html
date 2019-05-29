@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
 <div class="container" style="margin-top: 50px; margin-bottom: 200px;">
     <div class="row">
@@ -13,7 +12,13 @@
                 <div class="card-body">
                     <h4 class="card-title">글쓴이 : {{ post.user.username }}</h4>
                     <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="card-text">{{ post.content }}</p>
+                    {{ post.likes_count }}명이 좋아합니다.
+                    {% if user in post.likes.all %}
+                        <a href="{% url 'posts:like_toggle' post.id %}">좋아요 취소</a>
+                    {% else %}
+                        <a href="{% url 'posts:like_toggle' post.id %}">좋아요</a>
+                    {% endif %}
+                    <p class="card-text" style="margin-top: 30px;">{{ post.content }}</p>
                 </div>
             </div>
         <!-- </div> -->

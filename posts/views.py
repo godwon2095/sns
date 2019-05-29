@@ -47,3 +47,20 @@ def delete(request, id):
 
         return redirect('home')
     return redirect('home')
+
+
+def like_toggle(request, post_id):
+    user = request.user
+    if user.is_anonymous:
+        return redirect('account_login')
+    post = get_object_or_404(Post, pk=post_id)
+    
+    is_like = user in post.likes.all()
+    
+    if is_like:
+        post.likes.remove(user)
+    else:
+        post.likes.add(user)
+
+    return redirect('home')
+    

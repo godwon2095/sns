@@ -16,6 +16,7 @@ class Post(TimeStampedModel):
     content = TextField()
     view_count = IntegerField(default=0)
     image = ImageField(upload_to="img/")
+    likes = ManyToManyField(User, related_name="liked_users")
 
     def __str__(self):
        return self.title
@@ -26,7 +27,5 @@ class Comment(TimeStampedModel):
     post = ForeignKey(Post, on_delete=CASCADE)
     message = TextField()
 
-
-class Like(TimeStampedModel):
-    user = ForeignKey(User, on_delete=CASCADE)
-    post = ForeignKey(Post, on_delete=CASCADE)
+    def __str__(self):
+        return self.message
