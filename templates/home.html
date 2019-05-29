@@ -11,7 +11,16 @@
                     <img src="{{ post.image.url }}" class="card-img-top" alt="...">
                 {% endif %}
                 <div class="card-body">
-                    <h4 class="card-title">글쓴이 : {{ post.user.username }}</h4>
+                    <h4 class="card-title">
+                        글쓴이 : {{ post.user.username }}
+                        {% if user != post.user %}
+                            {% if post.user in current_user_followings %}
+                                <a href="{% url 'posts:follow_toggle' post.user.pk %}" class="btn btn-primary">팔로우취소</a>
+                            {% else %}
+                                <a href="{% url 'posts:follow_toggle' post.user.pk %}" class="btn btn-primary">팔로우</a>
+                            {% endif %}
+                        {% endif %}
+                    </h4>
                     <h5 class="card-title">{{ post.title }}</h5>
                     <p class="card-text">{{ post.content }}</p>
                 </div>

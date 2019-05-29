@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
+from users.models import User
 from django.db.models import Count
 
 
@@ -46,4 +47,15 @@ def delete(request, id):
         post.delete()
 
         return redirect('home')
+    return redirect('home')
+
+
+def follow_toggle(request, id):
+    user = request.user
+    followed_user = get_object_or_404(User, pk=id)
+    if followed_user in user.followings.all():
+        user.followings.remove(followed_user)
+    else:
+        user.followings.add(followed_user)
+
     return redirect('home')
