@@ -5,9 +5,10 @@
     <div class="row">
         {% for post in posts %}
         <!-- <div class="col-12"> -->
-            <div class="card col-12" style="width: 18rem; margin-top: 30px;">
+            <div class="card col-10" style="width: 18rem; margin-top: 30px;">
                 <div class="post-buttons" style="margin-top:10px;margin-bottom:10px;">
                     <span class="card-title writer">글쓴이 : {{ post.user.username }}</span>
+                    <a href="#" class="btn btn-primary">팔로우</a>
                     {% if user == post.user %}
                     <a href="{% url 'posts:delete' post.pk %}" class="btn btn-primary right" style="margin-left: 15px;">삭제</a>
                     <a href="{% url 'posts:edit' post.pk %}" class="btn btn-primary right">수정</a>
