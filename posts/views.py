@@ -49,6 +49,23 @@ def delete(request, id):
     return redirect('home')
 
 
+def create_comment(request, post_id):
+    if request.method == "POST":
+        user = request.user
+        if user.is_anonymous:
+            return redirect('account_login')
+        post = get_object_or_404(Post, pk=post_id)
+        message = request.POST.get('message')
+        Comment.objects.create(user=user, post=post, message=message)
+        return redirect('home')
+
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    comment.delete()
+    return redirect('home')
+
+
 def like_toggle(request, post_id):
     user = request.user
     if user.is_anonymous:

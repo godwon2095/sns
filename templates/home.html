@@ -19,6 +19,30 @@
                         <a href="{% url 'posts:like_toggle' post.id %}">좋아요</a>
                     {% endif %}
                     <p class="card-text" style="margin-top: 30px;">{{ post.content }}</p>
+                    
+                    <form action="{% url 'posts:create_comment' post.pk %}" method="POST" style="margin-top: 50px;">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea class="form-control" name="message" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="댓글 달기..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">작성</button>
+                    </form>
+
+                    {% if post.comments %}
+                    <ul class="list-group" style="margin-top: 40px;">
+                        {% for comment in post.comments %}
+                        <li class="list-group-item">
+                            <p>
+                                <b>{{ comment.user.username }}</b>
+                                {% if user == comment.user %}
+                                    <a href="{% url 'posts:delete_comment' comment.pk %}" class="right">삭제</a>
+                                {% endif %}
+                            </p>
+                            <p>{{ comment.message }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </div>
             </div>
         <!-- </div> -->
