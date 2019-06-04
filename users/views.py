@@ -12,9 +12,7 @@ def follow_toggle(request, id):
 
     if is_follower:
         user.followings.remove(followed_user)
-        followed_user.followers.remove(user)
     else:
         user.followings.add(followed_user)
-        followed_user.followers.add(user)
 
     return redirect('home')
