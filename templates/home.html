@@ -2,12 +2,34 @@
 
 {% block content %}
 <div class="container" style="margin-top: 50px; margin-bottom: 200px;">
-    <div class="row">
+    <div class="row justify-content-end">
+        <div class="col-4" style="margin-top: 30px;">
+            <div class="card profile-card" style="width: 18rem;">
+                {% if user.image %}
+                    <img src="{{ user.image.url }}" class="card-img-top" alt="...">
+                {% endif %}
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        <h5 class="card-title">{{ user.username }}</h5>
+                        <p class="card-text">{{ user.info }}</p>
+                        <a href="{% url 'users:show' user.pk %}" class="btn btn-primary">마이페이지</a>
+                    {% else %}
+                        <a href="{% url 'account_login' %}" class="btn btn-primary">로그인</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
         {% for post in posts %}
-        <!-- <div class="col-12"> -->
-            <div class="card col-10" style="width: 18rem; margin-top: 30px;">
+            <div class="card col-8" style="width: 18rem; margin-top: 30px;">
                 <div class="post-buttons" style="margin-top:10px;margin-bottom:10px;">
-                    <span class="card-title writer">글쓴이 : {{ post.user.username }}</span>
+                    <span class="card-title writer">
+                        {% if post.user.image %}
+                            <img src="{{ post.user.image.url }}" alt="" class="thumbnail-image">
+                        {% endif %}
+                        <a href="{% url 'users:show' post.user.pk %}" style="color:black;">
+                            {{ post.user.username }}
+                        </a>
+                    </span>
                     {% if user != post.user %}
                         {% if user in post.user.followers.all %}
                             <a href="{% url 'users:follow_toggle' post.user.id %}" class="btn btn-primary right">팔로우 취소</a>

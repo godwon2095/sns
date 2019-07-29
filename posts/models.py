@@ -1,22 +1,15 @@
-from django.db.models import *
+from django.db import models
 from users.models import User
-
-
-class TimeStampedModel(Model):
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
+from share.timestamp import TimeStampedModel
 
 
 class Post(TimeStampedModel):
-    user = ForeignKey(User, on_delete=CASCADE)
-    title = CharField(max_length=100)
-    content = TextField()
-    view_count = IntegerField(default=0)
-    image = ImageField(upload_to="img/")
-    likes = ManyToManyField(User, related_name="liked_users")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    view_count = models.IntegerField(default=0)
+    image = models.ImageField(upload_to="img/")
+    likes = models.ManyToManyField(User, related_name="liked_users")
 
     def __str__(self):
        return self.title
@@ -26,9 +19,9 @@ class Post(TimeStampedModel):
 
 
 class Comment(TimeStampedModel):
-    user = ForeignKey(User, on_delete=CASCADE)
-    post = ForeignKey(Post, on_delete=CASCADE)
-    message = TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    message = models.TextField()
 
     def __str__(self):
         return self.message

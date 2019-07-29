@@ -12,7 +12,6 @@ def new(request):
 
 
 def create(request):
-    context = {}
     if request.method == "POST":
        form = PostForm(request.POST, request.FILES or None)
        if form.is_valid():

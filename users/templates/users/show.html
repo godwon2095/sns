@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User: {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 30px;">
+  <h1>사용자 정보</h1>
+  <div class="row">
+    <div class="col-sm-12">
+        {% if user.image %}
+            <img src="{{ user.image.url }}" alt="" width="400" height="400">
+        {% endif %}
+        <h2>사용자명 : {{ user.username }}</h2>
+        <p>자기소개 : {{ user.info }}</p>
+    </div>
+  </div>
+
+{% if user == request.user %}
+<!-- Action buttons -->
+<div class="row">
+
+  <div class="col-sm-12">
+    <a class="btn btn-primary" href="{% url 'users:update' request.user.pk %}" role="button">정보 수정</a>
+    <!-- Your Stuff: Custom user template urls -->
+  </div>
+
+</div>
+<!-- End Action buttons -->
+{% endif %}
+
+
+</div>
+{% endblock content %}
+

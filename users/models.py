@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class User(AbstractUser):
     image = ImageField(_("Image of User"), upload_to="img/", default="none/default_profile.jpg")
+    info = TextField(null=True, blank=True)
     followings = ManyToManyField("self", related_name='followers', symmetrical=False)
 
     # def get_absolute_url(self):
