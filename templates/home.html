@@ -64,6 +64,7 @@
                     </form><br>
 
                     {% if post.comments %}
+                    <h5>댓글 수 : {{ post.comments.count }}</h5>
                     <ul class="list-group" style="margin-top: 40px;">
                         {% for comment in post.comments %}
                         <li class="list-group-item">
