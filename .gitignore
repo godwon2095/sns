@@ -276,9 +276,3 @@ tags
 pyvenv.cfg
 pip-selfcheck.json
 .env
-
-.pem
-sns/media
-.pytest_chche/
-db.sqlite3
-uwsgi.ini
