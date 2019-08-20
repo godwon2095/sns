@@ -19,6 +19,10 @@ class Post(TimeStampedModel):
 
 
 class Comment(TimeStampedModel):
+
+    class Meta:
+        ordering = ['-created_at']
+        
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     message = models.TextField()

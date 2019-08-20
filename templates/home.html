@@ -55,26 +55,18 @@
                     {% endif %}
                     <p class="card-text" style="margin-top: 30px;">{{ post.content }}</p>
                     
-                    <form action="{% url 'posts:create_comment' post.pk %}" method="POST" style="margin-top: 50px;">
+                    <form action="{% url 'posts:create_comment' post.pk %}" method="POST" style="margin-top: 50px;" id="create-comment-form" data-remote="true">
                         {% csrf_token %}
                         <div class="form-group">
-                            <textarea class="form-control" name="message" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="댓글 달기..."></textarea>
+                            <textarea class="form-control" name="message" id="comment-input" aria-describedby="emailHelp" placeholder="댓글 달기..."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary right">작성</button>
+                        <button type="submit" class="btn btn-primary right" id="comment-submit-button">작성</button>
                     </form><br>
 
                     {% if post.comments %}
-                    <ul class="list-group" style="margin-top: 40px;">
+                    <ul class="list-group" id="comments-list" style="margin-top: 40px;">
                         {% for comment in post.comments %}
-                        <li class="list-group-item">
-                            <p>
-                                <b>{{ comment.user.username }}</b>
-                                {% if user == comment.user %}
-                                    <a href="{% url 'posts:delete_comment' comment.pk %}" class="right">삭제</a>
-                                {% endif %}
-                            </p>
-                            <p>{{ comment.message }}</p>
-                        </li>
+                            {% include 'comments/_comment.html' with comment=comment user=user %}
                         {% endfor %}
                     </ul>
                     {% endif %}
@@ -85,4 +77,25 @@
     </div>
 </div>
 {% endblock content %}
-    
+
+{% block js %}
+<script>
+    $(function() {
+        $('#comment-submit-button').click(function(e){
+            const commentMessage = $('#comment-input').val();
+            if (commentMessage === '') {
+                e.preventDefault();
+                alert('댓글 내용을 입력해주세요.');
+            }
+        })
+
+        $('#create-comment-form').on('ajax:success', function(event, data) {
+            $('#comments-list').prepend(data.comment);
+            $('#comment-input').val('');
+        });
+        $('#create-comment-formdy').on('error', '#create-comment-form', function(event, data) {
+            alert('잘못 된 접근입니다.');
+        });
+    })
+</script>
+{% endblock %}

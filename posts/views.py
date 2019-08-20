@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from django.db.models import Count
+import json, pdb
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.template.loader import render_to_string
 
 
 def new(request):
@@ -45,6 +50,8 @@ def delete(request, id):
     return redirect('home')
 
 
+@login_required
+@require_POST
 def create_comment(request, post_id):
     if request.method == "POST":
         user = request.user
@@ -52,8 +59,12 @@ def create_comment(request, post_id):
             return redirect('account_login')
         post = get_object_or_404(Post, pk=post_id)
         message = request.POST.get('message')
-        Comment.objects.create(user=user, post=post, message=message)
-        return redirect('home')
+        comment = Comment.objects.create(user=user, post=post, message=message)    
+        rendered = render_to_string('comments/_comment.html', { 'comment': comment, 'user': request.user })
+        context = {
+            'comment': rendered
+        }
+        return HttpResponse(json.dumps(context), content_type="application/json")
 
 
 def delete_comment(request, comment_id):
