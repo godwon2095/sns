@@ -32,9 +32,9 @@
                     </span>
                     {% if user != post.user %}
                         {% if user in post.user.followers.all %}
-                            <a href="{% url 'users:follow_toggle' post.user.id %}" class="btn btn-primary right">팔로우 취소</a>
+                            <a href="{% url 'users:follow_toggle' post.user.id %}" class="btn btn-primary right" data-remote="true">팔로우 취소</a>
                         {% else %}
-                            <a href="{% url 'users:follow_toggle' post.user.id %}" class="btn btn-primary right">팔로우</a>
+                            <a href="{% url 'users:follow_toggle' post.user.id %}" class="btn btn-primary right" data-remote="true">팔로우</a>
                         {% endif %}
                     {% endif %}
                     {% if user == post.user %}
@@ -47,24 +47,24 @@
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ post.title }}</h5>
-                    {{ post.likes_count }}명이 좋아합니다.
-                    {% if user in post.likes.all %}
-                        <a href="{% url 'posts:like_toggle' post.id %}" data-remote="true">좋아요 취소</a>
+                    <span id="likes-count-{{ post.pk }}">{{ post.liked_users_count }}</span>명이 좋아합니다.
+                    {% if user in post.liked_users.all %}
+                        <a href="#" class="like_toggle" data-post-id="{{ post.pk }}">좋아요 취소</a>
                     {% else %}
-                        <a href="{% url 'posts:like_toggle' post.id %}" data-remote="true">좋아요</a>
+                        <a href="#" class="like_toggle" data-post-id="{{ post.pk }}">좋아요</a>
                     {% endif %}
                     <p class="card-text" style="margin-top: 30px;">{{ post.content }}</p>
                     
-                    <form action="{% url 'posts:create_comment' post.pk %}" method="POST" style="margin-top: 50px;" id="create-comment-form" data-remote="true">
+                    <form action="#" method="POST" style="margin-top: 50px;" class="create-comment-form" data-remote="true">
                         {% csrf_token %}
                         <div class="form-group">
-                            <textarea class="form-control" name="message" id="comment-input" aria-describedby="emailHelp" placeholder="댓글 달기..."></textarea>
+                            <textarea class="form-control" name="message" id="comment-input-{{ post.pk }}" aria-describedby="emailHelp" placeholder="댓글 달기..."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary right" id="comment-submit-button">작성</button>
+                        <button type="submit" class="btn btn-primary right comment-submit-button" data-post-id="{{ post.pk }}">작성</button>
                     </form><br>
 
                     {% if post.comments %}
-                    <ul class="list-group" id="comments-list" style="margin-top: 40px;">
+                    <ul class="list-group" id="comments-list-{{ post.pk }}" style="margin-top: 40px;">
                         {% for comment in post.comments %}
                             {% include 'comments/_comment.html' with comment=comment user=user %}
                         {% endfor %}
@@ -81,20 +81,49 @@
 {% block js %}
 <script>
     $(function() {
-        $('#comment-submit-button').click(function(e){
-            const commentMessage = $('#comment-input').val();
-            if (commentMessage === '') {
-                e.preventDefault();
-                alert('댓글 내용을 입력해주세요.');
-            }
-        })
-
-        $('#create-comment-form').on('ajax:success', function(response) {
-            $('#comments-list').prepend(response.comment);
-            $('#comment-input').val('');
+        // 좋아요 Ajax
+        $('.like_toggle').click(function(e){
+            e.preventDefault();
+            const likeButton = $(this);
+            const postId = likeButton.data('post-id');
+            $.ajax({
+                url: `/posts/${postId}/like_toggle/`,
+                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                type: "POST",
+                success: function(response) {
+                    likeButton.html(response.result);
+                    $(`#likes-count-${postId}`).html(response.likes_count);
+                },
+                error: function(response) {
+                    alert('오류가 발생했습니다.');
+                }
+            });
         });
-        $('#create-comment-formdy').on('error', '#create-comment-form', function(response) {
-            alert('잘못 된 접근입니다.');
+
+        // 댓글 생성시 Ajax
+        $('.comment-submit-button').click(function(e){
+            e.preventDefault();
+            const postId = $(this).data('post-id');
+            const commentMessage = $(`#comment-input-${postId}`).val();
+            if (commentMessage === '') {
+                alert('댓글 내용을 입력해주세요.');
+            } else {
+                $.ajax({
+                    url: `/posts/${postId}/create_comment/`,
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'message': commentMessage
+                    },
+                    type: "POST",
+                    success: function(response) {
+                        $(`#comments-list-${postId}`).prepend(response.comment);
+                        $(`#comment-input-${postId}`).val('');
+                    },
+                    error: function(response) {
+                        alert('오류가 발생했습니다.');
+                    }
+                });
+            }
         });
     })
 </script>

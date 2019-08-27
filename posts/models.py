@@ -10,9 +10,9 @@ class Post(TimeStampedModel):
     content = models.TextField()
     view_count = models.IntegerField(default=0)
     image = models.ImageField(upload_to="img/")
-    like_users = models.ManyToManyField(User,
+    liked_users = models.ManyToManyField(User,
                                         blank=True,
-                                        related_name='like_users',
+                                        related_name='liked_users',
                                         through='Like')
 
     def __str__(self):
@@ -24,7 +24,7 @@ class Post(TimeStampedModel):
 
     @property
     def likes_count(self):
-        return self.like_users.count()
+        return self.liked_users.count()
 
 
 class Comment(TimeStampedModel):

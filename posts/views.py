@@ -73,18 +73,22 @@ def delete_comment(request, comment_id):
     return redirect('home')
 
 
+@require_POST
+@login_required
 def like_toggle(request, post_id):
-    user = request.user
-    if user.is_anonymous:
-        return redirect('account_login')
     post = get_object_or_404(Post, pk=post_id)
-    
-    is_like = user in post.likes.all()
-    
-    if is_like:
-        post.likes.remove(user)
-    else:
-        post.likes.add(user)
+    post_like, post_like_created = post.like_set.get_or_create(user=request.user)
 
-    return redirect('home')
+    if not post_like_created:
+        post_like.delete()
+        result = "좋아요"
+    else:
+        result = "좋아요 취소"
+
+    context = {
+        'likes_count': post.likes_count,
+        'result': result
+    }
+
+    return HttpResponse(json.dumps(context), content_type="application/json")
     
