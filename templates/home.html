@@ -118,12 +118,46 @@
                     success: function(response) {
                         $(`#comments-list-${postId}`).prepend(response.comment);
                         $(`#comment-input-${postId}`).val('');
+                        $(`#comment-delete-${response.comment_pk}`).click(function(e){
+                            e.preventDefault();
+                            const deleteCommentButton = $(this);
+                            const commentId = $(this).data('comment-id');
+                            $.ajax({
+                                url: `/posts/${commentId}/delete_comment/`,
+                                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                                type: "POST",
+                                success: function(response) {
+                                    $(`#comment-${commentId}`).remove();
+                                },
+                                error: function(response) {
+                                    alert('오류가 발생했습니다.');
+                                }
+                            })
+                        });
                     },
                     error: function(response) {
                         alert('오류가 발생했습니다.');
                     }
                 });
             }
+        });
+
+        // 댓글 삭제시 Ajax
+        $('.comment-delete-button').click(function(e){
+            e.preventDefault();
+            const deleteCommentButton = $(this);
+            const commentId = $(this).data('comment-id');
+            $.ajax({
+                url: `/posts/${commentId}/delete_comment/`,
+                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                type: "POST",
+                success: function(response) {
+                    $(`#comment-${commentId}`).remove();
+                },
+                error: function(response) {
+                    alert('오류가 발생했습니다.');
+                }
+            })
         });
     })
 </script>

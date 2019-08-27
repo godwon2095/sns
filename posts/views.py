@@ -62,7 +62,8 @@ def create_comment(request, post_id):
         comment = Comment.objects.create(user=user, post=post, message=message)    
         rendered = render_to_string('comments/_comment.html', { 'comment': comment, 'user': request.user })
         context = {
-            'comment': rendered
+            'comment': rendered,
+            'comment_pk': comment.pk
         }
         return HttpResponse(json.dumps(context), content_type="application/json")
 
