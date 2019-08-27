@@ -49,9 +49,9 @@
                     <h5 class="card-title">{{ post.title }}</h5>
                     {{ post.likes_count }}명이 좋아합니다.
                     {% if user in post.likes.all %}
-                        <a href="{% url 'posts:like_toggle' post.id %}">좋아요 취소</a>
+                        <a href="{% url 'posts:like_toggle' post.id %}" data-remote="true">좋아요 취소</a>
                     {% else %}
-                        <a href="{% url 'posts:like_toggle' post.id %}">좋아요</a>
+                        <a href="{% url 'posts:like_toggle' post.id %}" data-remote="true">좋아요</a>
                     {% endif %}
                     <p class="card-text" style="margin-top: 30px;">{{ post.content }}</p>
                     
@@ -89,11 +89,11 @@
             }
         })
 
-        $('#create-comment-form').on('ajax:success', function(event, data) {
-            $('#comments-list').prepend(data.comment);
+        $('#create-comment-form').on('ajax:success', function(response) {
+            $('#comments-list').prepend(response.comment);
             $('#comment-input').val('');
         });
-        $('#create-comment-formdy').on('error', '#create-comment-form', function(event, data) {
+        $('#create-comment-formdy').on('error', '#create-comment-form', function(response) {
             alert('잘못 된 접근입니다.');
         });
     })

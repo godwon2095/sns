@@ -276,3 +276,13 @@ tags
 pyvenv.cfg
 pip-selfcheck.json
 .env
+
+
+### Project template
+
+**/media/
+
+.pytest_cache/
+db.sqlite3
+**/__pycache__
+**/**/__pycache__
