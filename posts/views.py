@@ -53,19 +53,16 @@ def delete(request, id):
 @login_required
 @require_POST
 def create_comment(request, post_id):
-    if request.method == "POST":
-        user = request.user
-        if user.is_anonymous:
-            return redirect('account_login')
-        post = get_object_or_404(Post, pk=post_id)
-        message = request.POST.get('message')
-        comment = Comment.objects.create(user=user, post=post, message=message)    
-        rendered = render_to_string('comments/_comment.html', { 'comment': comment, 'user': request.user })
-        context = {
-            'comment': rendered,
-            'comment_pk': comment.pk
-        }
-        return HttpResponse(json.dumps(context), content_type="application/json")
+    user = request.user
+    post = get_object_or_404(Post, pk=post_id)
+    message = request.POST.get('message')
+    comment = Comment.objects.create(user=user, post=post, message=message)    
+    rendered = render_to_string('comments/_comment.html', { 'comment': comment, 'user': request.user })
+    context = {
+        'comment': rendered,
+        'comment_pk': comment.pk
+    }
+    return HttpResponse(json.dumps(context), content_type="application/json")
 
 
 def delete_comment(request, comment_id):
