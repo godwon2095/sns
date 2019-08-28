@@ -55,7 +55,7 @@
                     {% endif %}
                     <p class="card-text" style="margin-top: 30px;">{{ post.content }}</p>
                     
-                    <form action="#" method="POST" style="margin-top: 50px;" class="create-comment-form" data-remote="true">
+                    <form action="#" method="POST" style="margin-top: 50px;" class="create-comment-form">
                         {% csrf_token %}
                         <div class="form-group">
                             <textarea class="form-control" name="message" id="comment-input-{{ post.pk }}" aria-describedby="emailHelp" placeholder="댓글 달기..."></textarea>
