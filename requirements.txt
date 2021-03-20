@@ -40,7 +40,7 @@ ipython==7.3.0
 ipython-genutils==0.2.0
 itypes==1.1.0
 jedi==0.13.3
-Jinja2==2.10
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 mccabe==0.6.1
 more-itertools==6.0.0
